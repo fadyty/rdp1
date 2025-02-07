@@ -1,0 +1,200 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Payment Gateway</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Top navigation bar */
+        .navbar {
+            background-color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar .logo {
+            width: 100px;
+        }
+
+        .menu-icon {
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            transition: 0.3s;
+        }
+
+        h2 {
+            color: #333;
+            font-size: 20px;
+        }
+
+        .input-box {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .btn {
+            background-color: #0070ba;
+            color: white;
+            padding: 12px;
+            width: 100%;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn:hover {
+            background-color: #005b9f;
+            transform: scale(1.05);
+        }
+
+        .payment-section {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .payment-method {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 10px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            transition: 0.3s;
+            background: white;
+        }
+
+        .payment-method:hover {
+            background-color: #f0f2f5;
+        }
+
+        .payment-method img {
+            width: 50px;
+        }
+
+        .success-message {
+            color: #155724;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top navigation bar -->
+    <div class="navbar">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="Logo" class="logo">
+        <div class="menu-icon">☰</div>
+    </div>
+
+    <!-- Payment Form -->
+    <div class="container" id="payment-form">
+        <h2>Enter Payment Details</h2>
+        <input type="email" id="email" class="input-box" placeholder="Recipient Email">
+        <input type="number" id="amount" class="input-box" placeholder="Amount (USD)">
+        <button class="btn" onclick="showPaymentOptions()">Continue</button>
+    </div>
+
+    <!-- Payment Confirmation + Payment Methods -->
+    <div class="container payment-section" id="payment-section">
+        <h2>Confirm Payment</h2>
+        <p id="confirm-amount"></p>
+        <p id="confirm-email"></p>
+        
+        <h3>Select Payment Method</h3>
+        <div class="payment-method" onclick="processPayment('Credit Card')">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg" alt="Credit Card">
+            <span>Credit / Debit Card</span>
+        </div>
+        <div class="payment-method" onclick="processPayment('PayPal')">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal">
+            <span>PayPal</span>
+        </div>
+
+        <button class="btn" onclick="confirmPayment()">Pay Now</button>
+    </div>
+
+    <!-- Payment Success Page -->
+    <div class="container payment-section" id="success-page">
+        <h2>Payment Successful</h2>
+        <p id="transaction-details"></p>
+        <p class="success-message">Your payment has been processed successfully. It may take 1-3 days to complete.</p>
+    </div>
+
+    <script>
+        function showPaymentOptions() {
+            var email = document.getElementById("email").value.trim();
+            var amount = parseFloat(document.getElementById("amount").value.trim());
+
+            if (!email || amount <= 0) {
+                alert("Please enter a valid email and amount.");
+                return;
+            }
+
+            document.getElementById("payment-form").style.display = "none";
+            document.getElementById("payment-section").style.display = "block";
+            
+            document.getElementById("confirm-amount").innerHTML = `<strong>Amount: $${amount.toFixed(2)}</strong>`;
+            document.getElementById("confirm-email").innerHTML = `Recipient: ${email}`;
+        }
+
+        function processPayment(method) {
+            document.getElementById("payment-section").setAttribute("data-method", method);
+        }
+
+        function confirmPayment() {
+            var paymentMethod = document.getElementById("payment-section").getAttribute("data-method");
+
+            if (!paymentMethod) {
+                alert("Please select a payment method first.");
+                return;
+            }
+
+            document.getElementById("payment-section").style.display = "none";
+            document.getElementById("success-page").style.display = "block";
+
+            var email = document.getElementById("email").value.trim();
+            var amount = parseFloat(document.getElementById("amount").value.trim());
+
+            document.getElementById("transaction-details").innerHTML = 
+                `Transaction ID: TXN${Math.floor(Math.random() * 1000000)}<br>
+                Amount: $${amount.toFixed(2)}<br>
+                Sent to: ${email}<br>
+                Payment Method: ${paymentMethod}`;
+        }
+    </script>
+
+</body>
+</html>
+
